@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+export REPO=${REPO:-waynz0r}
+export PKG=${PKG:-rancher-consul-registrator}
+
+mkdir -p usr/bin usr/sbin
+if [ -e ./scripts/$1 ]; then
+    ./scripts/"$@"
+else
+    exec "$@"
+fi
+
+chown -R $DAPPER_UID:$DAPPER_GID .

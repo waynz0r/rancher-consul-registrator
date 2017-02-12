@@ -1,0 +1,9 @@
+#!/bin/bash
+set -ex
+
+mkdir -p $(dirname ${BUILT_BINARY}) 2>/dev/null
+
+GOOS=linux godep go build -a --ldflags '-extldflags "-static"' -tags netgo -installsuffix netgo -o ${BUILT_BINARY}
+#godep go build -ldflags "-X main.VERSION=$VERSION" -o ${BUILT_BINARY}
+
+echo Built ${BUILT_BINARY}

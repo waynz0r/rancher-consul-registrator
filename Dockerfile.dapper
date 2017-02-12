@@ -1,0 +1,23 @@
+FROM golang:1.7-alpine
+
+RUN \
+    # Install build and runtime packages
+    build_pkgs="bash git wget file curl" && \
+    apk update && \
+    apk upgrade && \
+    apk --update --no-cache add ${build_pkgs} && \
+    go get github.com/tools/godep
+
+ENV PKG rancher-consul-registrator
+
+ENV DOCKER_URL=https://get.docker.com/builds/Linux/x86_64/docker-1.10.3
+RUN wget -O - ${DOCKER_URL} > /usr/bin/docker && chmod +x /usr/bin/docker
+
+ENV DAPPER_DOCKER_SOCKET true
+ENV DAPPER_SOURCE /go/src/github.com/waynz0r/rancher-consul-registrator
+ENV BUILT_BINARY ${DAPPER_SOURCE}/bin/rancher-consul-registrator
+ENV HOME ${DAPPER_SOURCE}
+WORKDIR ${DAPPER_SOURCE}
+
+ENTRYPOINT ["./scripts/entry"]
+CMD [ "package" ]
